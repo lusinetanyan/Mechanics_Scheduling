@@ -116,7 +116,7 @@ public class CourseArray {
 
 	public int[] getTimeSlot(int index){
 		int[] pattern = new int[elements.length];
-		for(int i = 0; i < pattern.length; i++){
+		for(int i = 1; i < pattern.length; i++){
 			pattern[i] = slot(i) == index ? 1 : -1;
 		}
 		return pattern;

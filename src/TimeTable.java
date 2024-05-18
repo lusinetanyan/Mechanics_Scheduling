@@ -68,9 +68,9 @@ public class TimeTable extends JFrame implements ActionListener {
             this.tool[i].addActionListener(this);
             this.tools.add(this.tool[i]);
         }
-        this.field[0].setText("13");
-        this.field[1].setText("139");
-        this.field[2].setText("Files/sta-f-83.stu");
+        this.field[0].setText("10");
+        this.field[1].setText("622");
+        this.field[2].setText("Files/uta-s-92.stu");
         this.field[3].setText("1");
 
         tool[7].setEnabled(false);
@@ -108,6 +108,8 @@ public class TimeTable extends JFrame implements ActionListener {
                 network = new Autoassociator(courses);
                 trainingCount = (int) Math.ceil(0.139 * this.courses.length());
                 tool[6].setEnabled(true);
+                tool[7].setEnabled(false);
+                LOGGER.info("Slots: " + this.field[0].getText() + "\n" + "Shifts: " + this.field[4].getText());
                 break;
             case 1:
                 int min = 2147483647;
@@ -138,9 +140,12 @@ public class TimeTable extends JFrame implements ActionListener {
             case 3:
                 System.out.println("Exam\tSlot\tClashes");
 
+                StringBuilder print = new StringBuilder("\"Exam\\tSlot\\tClashes\"");
                 for (iteration = 1; iteration < this.courses.length(); ++iteration) {
-                    System.out.println(iteration + "\t" + this.courses.slot(iteration) + "\t" + this.courses.status(iteration));
+                    print.append("\n").append(iteration).append("\t").append(this.courses.slot(iteration)).append("\t").append(this.courses.status(iteration));
                 }
+
+                LOGGER.info(String.valueOf(print));
                 return;
             case 4:
                 System.exit(0);
@@ -167,6 +172,11 @@ public class TimeTable extends JFrame implements ActionListener {
             case 6://train
                 List<int[]> clashFreeTimeSlots = courses.getClashFreeTimeSlots(1);
 
+                if(clashFreeTimeSlots.isEmpty()) {
+                    tool[6].setEnabled(false);
+                    tool[7].setEnabled(true);
+                }
+
                 for (int i = 0; i < clashFreeTimeSlots.size(); i++) {
                     if (--trainingCount > 0) {
                         network.training(clashFreeTimeSlots.get(i));
@@ -183,7 +193,6 @@ public class TimeTable extends JFrame implements ActionListener {
                     int[] timeslotUpdated = clashedTimeSlots.get(randomSlot);
                     int[] result = network.unitUpdate(timeslotUpdated);
                     int courseIndex = result[0];
-                    int updatedValue = result[1];
                     (courses.getElements())[courseIndex].mySlot = randomSlot;
                     this.draw();
                     LOGGER.info("Operation: Update network" + "\n" + "Shift:" + this.field[4].getText() + "\tMin clashes:" + this.courses.clashesLeft());
