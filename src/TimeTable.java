@@ -68,10 +68,11 @@ public class TimeTable extends JFrame implements ActionListener {
             this.tool[i].addActionListener(this);
             this.tools.add(this.tool[i]);
         }
-        this.field[0].setText("10");
-        this.field[1].setText("622");
-        this.field[2].setText("Files/uta-s-92.stu");
-        this.field[3].setText("1");
+
+        field[0].setText("17");
+        field[1].setText("682");
+        field[2].setText("Files/car-s-91.stu");
+        field[3].setText("1");
 
         tool[7].setEnabled(false);
         tool[6].setEnabled(false);
